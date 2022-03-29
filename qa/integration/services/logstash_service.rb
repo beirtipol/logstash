@@ -254,7 +254,12 @@ class LogstashService < Service
       end
     end
 
-    process.poll_for_exit(TIMEOUT_MAXIMUM)
+    # wrapping for debug
+    begin
+      process.poll_for_exit(30)
+    rescue => e
+      puts e.inspect
+    end
     out.rewind
     ProcessStatus.new(process.exit_code, out.read)
   end
