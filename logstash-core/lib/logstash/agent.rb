@@ -389,6 +389,11 @@ class LogStash::Agent
               :backtrace => action_result.backtrace
             )
           end
+          # An IllegalStateException will cause `converge_result.add` to throw and crash logstash hard, regardless of whether there
+          # are other pipelines setup, or config.reload.automatic is setup.
+        rescue java.lang.IllegalStateException => e
+          logger.error("Failed to execute action", :action => action, :exception => e.class.name, :message => e.message, :backtrace => e.backtrace)
+          converge_result.add(action, LogStash::ConfigurationError.new(e))
         rescue SystemExit, Exception => e
           logger.error("Failed to execute action", :action => action, :exception => e.class.name, :message => e.message, :backtrace => e.backtrace)
           converge_result.add(action, e)
