@@ -50,8 +50,8 @@ describe "CLI > logstash-plugin remove" do
           it "successfully remove the plugin" do
             execute = @logstash_plugin.run_raw("#{offline_wrapper_cmd} bin/logstash-plugin remove #{test_plugin}")
 
-            expect(execute.exit_code).to eq(0)
             expect(execute.stderr_and_stdout).to match(/Successfully removed #{test_plugin}/)
+            expect(execute.exit_code).to eq(0)
 
             presence_check = @logstash_plugin.list(test_plugin)
             expect(presence_check.exit_code).to eq(1)
